@@ -29,9 +29,8 @@ export class AuthController {
   }
 
   @Post('/refresh')
-  async getToken(@Req() request: Request) {
-    return await this.authService.validateRefreshToken(
-      request.headers['authorization'].split(' ')[1],
-    );
+  async getToken(@Body() { token }: { token: string }) {
+    console.log(token);
+    return await this.authService.validateRefreshToken(token);
   }
 }

@@ -37,6 +37,7 @@ export class AuthService {
     }
     return {
       accessToken: await this.createAccessToken({ userId: user.userId }),
+      refreshToken: await this.createRefreshToken({ userId: user.userId }),
       user,
     };
   }
@@ -45,6 +46,7 @@ export class AuthService {
     const user = await this.userService.createUser(registerUserDto);
     return {
       accessToken: await this.createAccessToken({ userId: user.userId }),
+      refreshToken: await this.createRefreshToken({ userId: user.userId }),
       user,
     };
   }
@@ -63,10 +65,15 @@ export class AuthService {
       const { userId } = this.jwtService.verify(token, {
         secret: 'jwtSecret',
       });
-      console.log(userId);
+
+      const user = await this.prismaService.user.findUnique({
+        where: { userId },
+      });
+
       return {
         accessToken: await this.createAccessToken({ userId }),
         refreshToken: await this.createRefreshToken({ userId }),
+        user,
       };
     } catch (err) {
       console.log(err);
