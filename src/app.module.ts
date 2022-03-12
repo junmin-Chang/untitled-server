@@ -7,9 +7,17 @@ import { PasswordProvider } from './provider/password';
 import { UserController } from './user/user.controller';
 import { UserModule } from './user/user.module';
 import { UserService } from './user/user.service';
-
+import { BookModule } from './book/book.module';
+import { ConfigModule } from '@nestjs/config';
 @Module({
-  imports: [AuthModule, UserModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    AuthModule,
+    UserModule,
+    BookModule,
+  ],
   controllers: [AppController, UserController],
   providers: [AppService, PrismaService, UserService, PasswordProvider],
 })

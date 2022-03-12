@@ -25,6 +25,7 @@ export class AuthService {
     const user = await this.prismaService.user.findUnique({
       where: { userId },
     });
+
     if (!user) {
       throw new NotFoundException('User not Found');
     }
@@ -35,6 +36,7 @@ export class AuthService {
     if (!validatePassword) {
       throw new UnauthorizedException('invalid password');
     }
+    delete user.password;
     return {
       accessToken: await this.createAccessToken({ userId: user.userId }),
       refreshToken: await this.createRefreshToken({ userId: user.userId }),
@@ -44,6 +46,7 @@ export class AuthService {
 
   async register(registerUserDto: RegisterUserDto): Promise<AuthResponse> {
     const user = await this.userService.createUser(registerUserDto);
+    delete user.password;
     return {
       accessToken: await this.createAccessToken({ userId: user.userId }),
       refreshToken: await this.createRefreshToken({ userId: user.userId }),
@@ -69,7 +72,7 @@ export class AuthService {
       const user = await this.prismaService.user.findUnique({
         where: { userId },
       });
-
+      delete user.password;
       return {
         accessToken: await this.createAccessToken({ userId }),
         refreshToken: await this.createRefreshToken({ userId }),

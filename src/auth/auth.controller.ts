@@ -1,7 +1,6 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '@prisma/client';
-import { Request } from 'express';
 import AuthUser from 'src/common/decorators/auth-user.decorator';
 import { AuthService } from './auth.service';
 import { AuthResponse } from './dto/auth-response.dto';
@@ -30,7 +29,6 @@ export class AuthController {
 
   @Post('/refresh')
   async getToken(@Body() { token }: { token: string }) {
-    console.log(token);
     return await this.authService.validateRefreshToken(token);
   }
 }
