@@ -8,10 +8,11 @@ export class BookService {
     private readonly httpService: HttpService,
     private configService: ConfigService,
   ) {}
-  async getBooksByName(name: string): Promise<any> {
+  async getBooksByValue(value: string): Promise<any> {
     const result = await lastValueFrom(
       this.httpService.get(
-        this.configService.get('NAVER_SEARCH_API') + `${encodeURI(name)}`,
+        this.configService.get('NAVER_SEARCH_API') +
+          `query=${decodeURI(encodeURI(value))}`,
         {
           headers: {
             'X-Naver-Client-Id': this.configService.get('NAVER_CLIENT_ID'),
@@ -22,6 +23,7 @@ export class BookService {
         },
       ),
     );
+
     return result.data.items;
   }
 }
