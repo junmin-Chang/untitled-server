@@ -24,6 +24,9 @@ export class AuthService {
 
     const user = await this.prismaService.user.findUnique({
       where: { userId },
+      include: {
+        book: true,
+      },
     });
 
     if (!user) {

@@ -1,12 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
+import { PrismaService } from 'src/prisma.service';
+import { AddBookDto } from './dto/add-book.dto';
+import { User } from '@prisma/client';
 @Injectable()
 export class BookService {
   constructor(
     private readonly httpService: HttpService,
     private configService: ConfigService,
+    private prismaService: PrismaService,
   ) {}
   async getBooksByValue(value: string): Promise<any> {
     const result = await lastValueFrom(
@@ -25,5 +29,25 @@ export class BookService {
     );
 
     return result.data.items;
+  }
+
+  async addBook(body: AddBookDto, user: User) {
+    const isExists = await this.prismaService.book.findFirst({
+      where: {
+        isbn: body.isbn,
+        userId: user.userId,
+      },
+    });
+
+    if (isExists) throw new HttpException('이미 등록된 책 입니다.', 404);
+
+    const result = await this.prismaService.book.create({
+      data: {
+        ...body,
+        userId: user.userId,
+      },
+    });
+    delete result.userId;
+    return result;
   }
 }
