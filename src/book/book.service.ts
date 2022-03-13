@@ -4,7 +4,7 @@ import { lastValueFrom } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma.service';
 import { AddBookDto } from './dto/add-book.dto';
-import { User } from '@prisma/client';
+import { Book, User } from '@prisma/client';
 @Injectable()
 export class BookService {
   constructor(
@@ -12,6 +12,14 @@ export class BookService {
     private configService: ConfigService,
     private prismaService: PrismaService,
   ) {}
+
+  async getBooks(user: User): Promise<Book[]> {
+    return await this.prismaService.book.findMany({
+      where: {
+        userId: user.userId,
+      },
+    });
+  }
   async getBooksByValue(value: string): Promise<any> {
     const result = await lastValueFrom(
       this.httpService.get(
