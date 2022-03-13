@@ -24,9 +24,9 @@ model Book {
   id String @id @default(uuid())
   title String
   image String
-  isbn String @unique()
+  isbn String 
   hasRead Boolean @default(false)
   willRead Boolean @default(false)
   user User? @relation(fields: [userId], references: [userId]) 
-  userId String @unique()
+  userId String 
 }
