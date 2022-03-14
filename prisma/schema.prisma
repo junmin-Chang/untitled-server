@@ -19,6 +19,7 @@ model User {
   updatedAt DateTime @default(now())
   book Book[]
   post Post[]
+  comment Comment[]
 }
 
 model Book {
@@ -41,5 +42,16 @@ model Post {
   userId String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+  comment Comment[]
 
+}
+model Comment {
+  id String @id @default(uuid())
+  content String
+  author User? @relation(fields: [userId], references: [userId])
+  post Post? @relation(fields: [postId], references: [id])
+  userId String
+  postId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }
