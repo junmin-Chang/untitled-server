@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { Book, User } from '@prisma/client';
@@ -21,13 +22,16 @@ export class BookController {
   constructor(private readonly bookService: BookService) {}
 
   @Get('')
-  async getBooks(@AuthUser() user: User): Promise<Book[]> {
-    return this.bookService.getBooks(user);
+  async getBooks(
+    @Query('sortBy') sortBy: string,
+    @AuthUser() user: User,
+  ): Promise<Book[]> {
+    return this.bookService.getBooks(sortBy, user);
   }
 
   @Get(':value')
-  async getBooksByValue(@Param('value') value: string): Promise<any> {
-    return await this.bookService.getBooksByValue(value);
+  async searchBooksByValue(@Param('value') value: string): Promise<any> {
+    return await this.bookService.searchBooksByValue(value);
   }
 
   @Post('')

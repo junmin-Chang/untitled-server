@@ -14,14 +14,7 @@ export class BookService {
     private prismaService: PrismaService,
   ) {}
 
-  async getBooks(user: User): Promise<Book[]> {
-    return await this.prismaService.book.findMany({
-      where: {
-        userId: user.userId,
-      },
-    });
-  }
-  async getBooksByValue(value: string): Promise<any> {
+  async searchBooksByValue(value: string): Promise<any> {
     const result = await lastValueFrom(
       this.httpService.get(
         this.configService.get('NAVER_SEARCH_API') +
@@ -38,6 +31,30 @@ export class BookService {
     );
 
     return result.data.items;
+  }
+  async getBooks(sortBy: string, user: User): Promise<Book[]> {
+    switch (sortBy) {
+      case 'willRead':
+        return await this.prismaService.book.findMany({
+          where: {
+            willRead: true,
+            userId: user.userId,
+          },
+        });
+      case 'hasRead':
+        return await this.prismaService.book.findMany({
+          where: {
+            hasRead: true,
+            userId: user.userId,
+          },
+        });
+      default:
+        return await this.prismaService.book.findMany({
+          where: {
+            userId: user.userId,
+          },
+        });
+    }
   }
 
   async addBook(body: AddBookDto, user: User) {
