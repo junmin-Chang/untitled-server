@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma.service';
 import { AddBookDto } from './dto/add-book.dto';
 import { Book, User } from '@prisma/client';
+import { UpdateBookDto } from './dto/update-book.dto';
 @Injectable()
 export class BookService {
   constructor(
@@ -57,5 +58,24 @@ export class BookService {
     });
     delete result.userId;
     return result;
+  }
+
+  async deleteBook(id: string) {
+    return await this.prismaService.book.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async updateBook(id: string, updateBookDto: UpdateBookDto) {
+    return await this.prismaService.book.update({
+      data: {
+        ...updateBookDto,
+      },
+      where: {
+        id,
+      },
+    });
   }
 }
