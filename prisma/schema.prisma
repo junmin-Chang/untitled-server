@@ -36,6 +36,7 @@ model Book {
 model Post {
   id String @id @default(uuid())
   title String
+  thumbnail String
   content String
   bookIsbn String
   author User? @relation(fields: [userId], references: [userId])
