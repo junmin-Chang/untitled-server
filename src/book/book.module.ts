@@ -8,5 +8,6 @@ import { BookService } from './book.service';
   imports: [HttpModule],
   controllers: [BookController],
   providers: [BookService, PrismaService],
+  exports: [BookService],
 })
 export class BookModule {}

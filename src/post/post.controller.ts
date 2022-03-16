@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Post as PostModel, User } from '@prisma/client';
 import AuthUser from 'src/common/decorators/auth-user.decorator';
@@ -9,8 +18,8 @@ import { PostService } from './post.service';
 export class PostController {
   constructor(private postService: PostService) {}
   @Get('')
-  async getPosts(): Promise<PostModel[]> {
-    return await this.postService.getPosts();
+  async getPosts(@Query('isbn') isbn: string): Promise<PostModel[]> {
+    return await this.postService.getPosts(isbn);
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -20,5 +29,20 @@ export class PostController {
     @AuthUser() user: User,
   ): Promise<PostModel> {
     return await this.postService.addPost(addPostDto, user);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get(':id')
+  async getPost(@Param('id') id: string): Promise<PostModel> {
+    return await this.postService.getPost(id);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete(':id')
+  async deletePost(
+    @Param('id') id: string,
+    @AuthUser() user: User,
+  ): Promise<PostModel> {
+    return await this.postService.deletePost(id, user);
   }
 }
