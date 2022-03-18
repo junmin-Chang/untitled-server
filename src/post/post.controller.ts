@@ -31,7 +31,6 @@ export class PostController {
     return await this.postService.addPost(addPostDto, user);
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   async getPost(@Param('id') id: string): Promise<PostModel> {
     return await this.postService.getPost(id);
