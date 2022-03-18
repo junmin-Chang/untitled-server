@@ -10,6 +10,7 @@ import { UserService } from './user/user.service';
 import { BookModule } from './book/book.module';
 import { ConfigModule } from '@nestjs/config';
 import { PostModule } from './post/post.module';
+import { CommentModule } from './comment/comment.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -19,6 +20,7 @@ import { PostModule } from './post/post.module';
     UserModule,
     BookModule,
     PostModule,
+    CommentModule,
   ],
   controllers: [AppController, UserController],
   providers: [AppService, PrismaService, UserService, PasswordProvider],
