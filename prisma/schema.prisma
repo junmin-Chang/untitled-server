@@ -50,7 +50,7 @@ model Comment {
   id String @id @default(uuid())
   content String
   author User? @relation(fields: [userId], references: [userId])
-  post Post? @relation(fields: [postId], references: [id])
+  post Post? @relation(fields: [postId], references: [id], onDelete: Cascade) 
   userId String
   postId String
   createdAt DateTime @default(now())
