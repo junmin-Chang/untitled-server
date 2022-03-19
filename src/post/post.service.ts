@@ -16,11 +16,17 @@ export class PostService {
       return await this.prismaService.post.findMany({
         include: {
           comment: true,
+          author: {
+            select: { userName: true },
+          },
         },
       });
     return await this.prismaService.post.findMany({
       include: {
         comment: true,
+        author: {
+          select: { userName: true },
+        },
       },
       where: {
         bookIsbn: isbn,
@@ -45,7 +51,16 @@ export class PostService {
         id,
       },
       include: {
-        comment: true,
+        comment: {
+          include: {
+            author: {
+              select: { userName: true },
+            },
+          },
+        },
+        author: {
+          select: { userName: true },
+        },
       },
     });
   }
@@ -75,6 +90,9 @@ export class PostService {
       },
       include: {
         comment: true,
+        author: {
+          select: { userName: true },
+        },
       },
     });
   }
@@ -85,6 +103,9 @@ export class PostService {
       },
       include: {
         comment: true,
+        author: {
+          select: { userName: true },
+        },
       },
     });
   }
