@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -11,6 +12,7 @@ import { Comment, User } from '@prisma/client';
 import AuthUser from 'src/common/decorators/auth-user.decorator';
 import { CommentService } from './comment.service';
 import { AddCommentDto } from './dto/AddCommentDto';
+import { UpdateCommentDto } from './dto/UpdateCommentDto';
 
 @Controller('comment')
 export class CommentController {
@@ -30,5 +32,14 @@ export class CommentController {
   @Delete(':commentId')
   async deleteComment(@Param('commentId') commentId: string): Promise<Comment> {
     return this.commentService.deleteComment(commentId);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Patch(':commentId')
+  async updateComment(
+    @Param('commentId') commentId: string,
+    @Body() updateCommentDto: UpdateCommentDto,
+  ): Promise<Comment> {
+    return await this.commentService.updateComment(commentId, updateCommentDto);
   }
 }

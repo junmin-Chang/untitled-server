@@ -2,6 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { Comment, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { AddCommentDto } from './dto/AddCommentDto';
+import { UpdateCommentDto } from './dto/UpdateCommentDto';
 
 @Injectable()
 export class CommentService {
@@ -36,5 +37,19 @@ export class CommentService {
     }
 
     throw new HttpException('부적절한 접근', 404);
+  }
+
+  async updateComment(
+    commentId: string,
+    updateCommentDto: UpdateCommentDto,
+  ): Promise<Comment> {
+    return await this.prismaService.comment.update({
+      data: {
+        ...updateCommentDto,
+      },
+      where: {
+        id: commentId,
+      },
+    });
   }
 }
