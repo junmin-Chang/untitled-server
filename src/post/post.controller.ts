@@ -37,6 +37,18 @@ export class PostController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @Get('/user/myPosts')
+  async getMyPosts(@AuthUser() user: User): Promise<PostModel[]> {
+    return await this.postService.getMyPosts(user);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/user/:userId')
+  async getUserPosts(@Param('userId') userId: string): Promise<PostModel[]> {
+    return await this.postService.getUserPosts(userId);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   async deletePost(
     @Param('id') id: string,

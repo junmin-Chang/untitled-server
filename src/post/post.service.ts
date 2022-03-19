@@ -67,4 +67,25 @@ export class PostService {
     }
     throw new HttpException('잘못된 접근입니다', 404);
   }
+
+  async getMyPosts(user: User): Promise<Post[]> {
+    return await this.prismaService.post.findMany({
+      where: {
+        userId: user.userId,
+      },
+      include: {
+        comment: true,
+      },
+    });
+  }
+  async getUserPosts(userId: string): Promise<Post[]> {
+    return await this.prismaService.post.findMany({
+      where: {
+        userId,
+      },
+      include: {
+        comment: true,
+      },
+    });
+  }
 }
