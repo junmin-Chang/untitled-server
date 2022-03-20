@@ -22,10 +22,14 @@ export class CommentController {
   @Post(':postId')
   async addComment(
     @Body() addCommentDto: AddCommentDto,
-    @Param('postId') postId,
+    @Param('postId') postId: string,
     @AuthUser() user: User,
   ): Promise<Comment> {
-    return await this.commentService.addComment(postId, addCommentDto, user);
+    return await this.commentService.addComment(
+      Number(postId),
+      addCommentDto,
+      user,
+    );
   }
 
   @UseGuards(AuthGuard('jwt'))

@@ -11,27 +11,32 @@ export class PostService {
     private bookService: BookService,
   ) {}
 
-  async getPosts(isbn: string): Promise<Post[]> {
-    if (!isbn)
-      return await this.prismaService.post.findMany({
-        include: {
-          comment: true,
-          author: {
-            select: { userName: true },
-          },
-        },
-      });
-    return await this.prismaService.post.findMany({
+  async getPosts(params: {
+    isbn: string;
+    skip?: number;
+    take?: number;
+  }): Promise<any> {
+    const { skip, take, isbn } = params;
+    const count = await this.prismaService.post.count();
+
+    const result = await this.prismaService.post.findMany({
+      take,
+      skip,
       include: {
         comment: true,
         author: {
           select: { userName: true },
         },
       },
-      where: {
-        bookIsbn: isbn,
+      orderBy: {
+        createdAt: 'desc',
       },
+      ...(isbn && { where: { bookIsbn: isbn } }),
     });
+    return {
+      data: [...result],
+      count,
+    };
   }
   async addPost(addPostDto: AddPostDto, user: User): Promise<Post> {
     const result = await this.bookService.searchBooksByValue(
@@ -45,7 +50,7 @@ export class PostService {
       },
     });
   }
-  async getPost(id: string): Promise<Post> {
+  async getPost(id: number): Promise<Post> {
     return await this.prismaService.post.findUnique({
       where: {
         id,
@@ -65,7 +70,7 @@ export class PostService {
     });
   }
 
-  async deletePost(id: string, user: User): Promise<Post> {
+  async deletePost(id: number, user: User): Promise<Post> {
     const isValid = this.prismaService.post.findFirst({
       where: {
         userId: user.userId,

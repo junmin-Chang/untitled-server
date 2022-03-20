@@ -34,7 +34,7 @@ model Book {
 }
 
 model Post {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
   title String
   thumbnail String
   content String
@@ -52,7 +52,7 @@ model Comment {
   author User? @relation(fields: [userId], references: [userId])
   post Post? @relation(fields: [postId], references: [id], onDelete: Cascade) 
   userId String
-  postId String
+  postId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }

@@ -9,14 +9,14 @@ export class CommentService {
   constructor(private prismaService: PrismaService) {}
 
   async addComment(
-    postId: string,
+    postId: number,
     addCommentDto: AddCommentDto,
     user: User,
   ): Promise<Comment> {
     return await this.prismaService.comment.create({
       data: {
         userId: user.userId,
-        postId,
+        postId: postId,
         ...addCommentDto,
       },
     });

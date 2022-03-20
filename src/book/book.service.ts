@@ -19,7 +19,7 @@ export class BookService {
       this.httpService.get(
         this.configService.get('NAVER_SEARCH_API') +
           `query=${decodeURI(encodeURI(value))}` +
-          `&start=${start}`,
+          `&start=${start ?? 1}`,
         {
           headers: {
             'X-Naver-Client-Id': this.configService.get('NAVER_CLIENT_ID'),

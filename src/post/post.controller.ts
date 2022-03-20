@@ -18,8 +18,16 @@ import { PostService } from './post.service';
 export class PostController {
   constructor(private postService: PostService) {}
   @Get('')
-  async getPosts(@Query('isbn') isbn: string): Promise<PostModel[]> {
-    return await this.postService.getPosts(isbn);
+  async getPosts(
+    @Query('isbn') isbn: string,
+    @Query('skip') skip: string,
+    @Query('take') take: string,
+  ): Promise<PostModel[]> {
+    return await this.postService.getPosts({
+      isbn,
+      skip: Number(skip),
+      take: Number(take),
+    });
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -33,7 +41,7 @@ export class PostController {
 
   @Get(':id')
   async getPost(@Param('id') id: string): Promise<PostModel> {
-    return await this.postService.getPost(id);
+    return await this.postService.getPost(Number(id));
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -54,6 +62,6 @@ export class PostController {
     @Param('id') id: string,
     @AuthUser() user: User,
   ): Promise<PostModel> {
-    return await this.postService.deletePost(id, user);
+    return await this.postService.deletePost(Number(id), user);
   }
 }
