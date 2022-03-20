@@ -14,11 +14,12 @@ export class BookService {
     private prismaService: PrismaService,
   ) {}
 
-  async searchBooksByValue(value: string): Promise<any> {
+  async searchBooksByValue(value: string, start?: string): Promise<any> {
     const result = await lastValueFrom(
       this.httpService.get(
         this.configService.get('NAVER_SEARCH_API') +
-          `query=${decodeURI(encodeURI(value))}`,
+          `query=${decodeURI(encodeURI(value))}` +
+          `&start=${start}`,
         {
           headers: {
             'X-Naver-Client-Id': this.configService.get('NAVER_CLIENT_ID'),

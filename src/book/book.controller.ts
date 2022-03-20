@@ -30,8 +30,11 @@ export class BookController {
   }
 
   @Get(':value')
-  async searchBooksByValue(@Param('value') value: string): Promise<any> {
-    return await this.bookService.searchBooksByValue(value);
+  async searchBooksByValue(
+    @Param('value') value: string,
+    @Query('start') start?: string,
+  ): Promise<any> {
+    return await this.bookService.searchBooksByValue(value, start);
   }
 
   @Post('')
