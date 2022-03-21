@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { AuthResponse } from './dto/auth-response.dto';
@@ -27,14 +23,17 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new NotFoundException('User not Found');
+      throw new HttpException(
+        '존재하지 않는 유저 입니다.',
+        HttpStatus.BAD_REQUEST,
+      );
     }
     const validatePassword = await this.passwordProvider.comparePassword(
       password,
       user.password,
     );
     if (!validatePassword) {
-      throw new UnauthorizedException('invalid password');
+      throw new HttpException('비밀번호가 틀립니다.', HttpStatus.UNAUTHORIZED);
     }
     delete user.password;
     return {
